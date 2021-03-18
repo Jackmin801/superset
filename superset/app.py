@@ -96,6 +96,12 @@ class SupersetAppInitializer:
         """
         Called after any other init tasks
         """
+        @self.flask_app.before_request
+        def session_refresh():
+            if request.path != appbuilder.get_url_for_login and session:
+                session.permanent = True
+                session.modified = True
+
 
     def configure_celery(self) -> None:
         celery_app.config_from_object(self.config["CELERY_CONFIG"])
