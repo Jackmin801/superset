@@ -166,6 +166,11 @@ export function createErrorHandler(
   return async (e: SupersetClientResponse | string) => {
     const parsedError = await getClientErrorObject(e);
     logging.error(e);
+    // navigate to log in page if the error is related to authorization
+    console.log(parsedError)
+    if (parsedError.msg?.toLowerCase().includes('missing authorization header')) {
+      window.location.href = 'login';
+    }
     handleErrorFunc(parsedError.message || parsedError.error);
   };
 }
